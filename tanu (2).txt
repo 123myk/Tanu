@@ -1,0 +1,30 @@
+        $(document).ready(function() {
+            // Custom validation method to check username availability
+            jQuery.validator.addMethod("checkUsernameAvailability", function(value, element) {
+                var result = false;
+                $.ajax({
+                    url: "check_username.php", // Replace with your server-side script to check username availability
+                    data: { username: value },
+                    async: false,
+                    success: function(response) {
+                        result = response === "available";
+                    }
+                });
+                return result;
+            }, "Username is already taken.");
+
+            // Apply validation rules to the form
+            $("#myForm").validate({
+                rules: {
+                    username: {
+                        required: true,
+                        checkUsernameAvailability: true
+                    }
+                },
+                messages: {
+                    username: {
+                        required: "Please enter a username."
+                    }
+                }
+            });
+        });
